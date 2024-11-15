@@ -7,11 +7,11 @@ BUTTON_PIN = 5  # Pin per il pulsante
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(SERVO_PIN, GPIO.OUT)
-GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Pull-up interno attivato
+GPIO.setup(BUTTON_PIN, GPIO.IN)  # Pull-up interno attivato
 
 # Configurazione PWM per il servomotore
 pwm = GPIO.PWM(SERVO_PIN, 50)  # Frequenza a 50 Hz
-pwm.start(0)  # Posizione iniziale a 90°
+pwm.start(5)  # Posizione iniziale a 90°
 
 # Variabili per il controllo
 positions = [5, 7.5, 10]  # Duty cycle per 0°, 90°, 180°
