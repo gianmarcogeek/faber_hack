@@ -1,39 +1,41 @@
 import RPi.GPIO as GPIO
 import time
 
-# Configurazione dei GPIO
-SERVO_PIN = 3  # Pin PWM per il servomotore
-BUTTON_PIN = 5  # Pin per il pulsante
+# Configurazione dei pin (numerazione BOARD)
+SERVO_PIN = 3  # Board pin 3
+BUTTON_PIN = 5  # Board pin 5
 
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)  # Usa la numerazione fisica dei pin
 GPIO.setup(SERVO_PIN, GPIO.OUT)
-GPIO.setup(BUTTON_PIN, GPIO.IN)  # Pull-up interno attivato
+GPIO.setup(BUTTON_PIN, GPIO.IN)  # Pull-up fisico gestito a livello hardware
 
-# Configurazione PWM per il servomotore
+# Configurazione PWM per il servo
 pwm = GPIO.PWM(SERVO_PIN, 50)  # Frequenza a 50 Hz
-pwm.start(5)  # Posizione iniziale a 90°
+pwm.start(5)  # Posizione iniziale: neutro (90°)
 
-# Variabili per il controllo
+# Variabili di stato
 positions = [5, 7.5, 10]  # Duty cycle per 0°, 90°, 180°
 current_position = 0
-time.sleep(3)
-pwm.ChangeDutyCycle(7.5)
-time.sleep(3)
-pwm.ChangeDutyCycle(10)
-time.sleep(3)
-pwm.ChangeDuty(5)
+
 # def button_pressed_callback(channel):
 #     global current_position
 #     current_position = (current_position + 1) % len(positions)
 #     pwm.ChangeDutyCycle(positions[current_position])
 #     print(f"Posizione attuale: {current_position * 90}°")
 
-# Configurazione dell'evento per il pulsante
-#GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
+# # Configura l'evento del pulsante con debouncing
+# GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
 
 try:
     while True:
-        time.sleep(0.5)  # Mantieni il programma attivo
+        time.sleep(0.1)  # Mantieni attivo il programma
+        pwm.ChangeDutyCycle(7.5)
+        time.sleep(2) 
+        pwm.ChangeDutyCycle(10)
+        time.sleep(2) 
+        pwm.ChangeDutyCycle(7.5)
+        time.sleep(2)
+        pwm.ChangeDutyCycle(5)
 except KeyboardInterrupt:
     pwm.stop()
     GPIO.cleanup()
