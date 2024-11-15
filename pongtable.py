@@ -16,9 +16,12 @@ pwm.start(5)  # Posizione iniziale a 90°
 # Variabili per il controllo
 positions = [5, 7.5, 10]  # Duty cycle per 0°, 90°, 180°
 current_position = 0
-time.sleep(1)
+time.sleep(3)
 pwm.ChangeDutyCycle(7.5)
-time.sleep(10)
+time.sleep(3)
+pwm.ChangeDutyCycle(10)
+time.sleep(3)
+pwm.ChangeDuty(5)
 # def button_pressed_callback(channel):
 #     global current_position
 #     current_position = (current_position + 1) % len(positions)
