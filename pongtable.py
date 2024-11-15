@@ -16,15 +16,17 @@ pwm.start(5)  # Posizione iniziale a 90°
 # Variabili per il controllo
 positions = [5, 7.5, 10]  # Duty cycle per 0°, 90°, 180°
 current_position = 0
-
-def button_pressed_callback(channel):
-    global current_position
-    current_position = (current_position + 1) % len(positions)
-    pwm.ChangeDutyCycle(positions[current_position])
-    print(f"Posizione attuale: {current_position * 90}°")
+time.sleep(1)
+pwm.ChangeDutyCycle(7.5)
+time.sleep(10)
+# def button_pressed_callback(channel):
+#     global current_position
+#     current_position = (current_position + 1) % len(positions)
+#     pwm.ChangeDutyCycle(positions[current_position])
+#     print(f"Posizione attuale: {current_position * 90}°")
 
 # Configurazione dell'evento per il pulsante
-GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
+#GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
 
 try:
     while True:
