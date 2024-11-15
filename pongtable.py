@@ -30,11 +30,11 @@ try:
     while True:
         time.sleep(0.1)  # Mantieni attivo il programma
         pwm.ChangeDutyCycle(7.5)
-        time.sleep(2) 
+        time.sleep(2000) 
         pwm.ChangeDutyCycle(10)
-        time.sleep(2) 
+        time.sleep(2000) 
         pwm.ChangeDutyCycle(7.5)
-        time.sleep(2)
+        time.sleep(2000)
         pwm.ChangeDutyCycle(5)
 except KeyboardInterrupt:
     pwm.stop()
