@@ -10,7 +10,7 @@ GPIO.setup(SERVO_PIN, GPIO.OUT)
 GPIO.setup(BUTTON_PIN, GPIO.IN)  # Pull-up fisico gestito a livello hardware
 
 # Configurazione PWM per il servo
-pwm = GPIO.PWM(SERVO_PIN, 50)  # Frequenza a 50 Hz
+pwm = GPIO.PWM(SERVO_PIN, 200)  # Frequenza a 50 Hz
 pwm.start(5)  # Posizione iniziale: neutro (90°)
 
 # Variabili di stato
@@ -30,11 +30,11 @@ try:
     while True:
         time.sleep(0.1)  # Mantieni attivo il programma
         pwm.ChangeDutyCycle(7.5)
-        time.sleep(2000) 
+        time.sleep(2) 
         pwm.ChangeDutyCycle(10)
-        time.sleep(2000) 
+        time.sleep(2) 
         pwm.ChangeDutyCycle(7.5)
-        time.sleep(2000)
+        time.sleep(2)
         pwm.ChangeDutyCycle(5)
 except KeyboardInterrupt:
     pwm.stop()
