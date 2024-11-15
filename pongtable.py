@@ -11,7 +11,7 @@ GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Pull-up interno att
 
 # Configurazione PWM per il servomotore
 pwm = GPIO.PWM(SERVO_PIN, 50)  # Frequenza a 50 Hz
-pwm.start(7.5)  # Posizione iniziale a 90°
+pwm.start(0)  # Posizione iniziale a 90°
 
 # Variabili per il controllo
 positions = [5, 7.5, 10]  # Duty cycle per 0°, 90°, 180°
@@ -28,7 +28,7 @@ GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_pressed_callback
 
 try:
     while True:
-        time.sleep(0.1)  # Mantieni il programma attivo
+        time.sleep(0.5)  # Mantieni il programma attivo
 except KeyboardInterrupt:
     pwm.stop()
     GPIO.cleanup()
