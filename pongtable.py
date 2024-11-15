@@ -1,41 +1,44 @@
+#!/usr/bin/env python3
+#-- coding: utf-8 --
 import RPi.GPIO as GPIO
 import time
 
-# Configurazione dei pin (numerazione BOARD)
-SERVO_PIN = 3  # Board pin 3
-BUTTON_PIN = 5  # Board pin 5
 
-GPIO.setmode(GPIO.BOARD)  # Usa la numerazione fisica dei pin
-GPIO.setup(SERVO_PIN, GPIO.OUT)
-GPIO.setup(BUTTON_PIN, GPIO.IN)  # Pull-up fisico gestito a livello hardware
+#Set function to calculate percent from angle
+def angle_to_percent (angle) :
+    if angle > 180 or angle < 0 :
+        return False
 
-# Configurazione PWM per il servo
-pwm = GPIO.PWM(SERVO_PIN, 500)  # Frequenza a 50 Hz
-pwm.start(5)  # Posizione iniziale: neutro (90°)
+    start = 4
+    end = 12.5
+    ratio = (end - start)/180 #Calcul ratio from angle to percent
 
-# Variabili di stato
-positions = [5, 7.5, 10]  # Duty cycle per 0°, 90°, 180°
-current_position = 0
+    angle_as_percent = angle * ratio
 
-# def button_pressed_callback(channel):
-#     global current_position
-#     current_position = (current_position + 1) % len(positions)
-#     pwm.ChangeDutyCycle(positions[current_position])
-#     print(f"Posizione attuale: {current_position * 90}°")
+    return start + angle_as_percent
 
-# # Configura l'evento del pulsante con debouncing
-# GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
 
-try:
-    while True:
-        time.sleep(0.1)  # Mantieni attivo il programma
-        pwm.ChangeDutyCycle(7.5)
-        time.sleep(2) 
-        pwm.ChangeDutyCycle(10)
-        time.sleep(2) 
-        pwm.ChangeDutyCycle(7.5)
-        time.sleep(2)
-        pwm.ChangeDutyCycle(5)
-except KeyboardInterrupt:
-    pwm.stop()
-    GPIO.cleanup()
+GPIO.setmode(GPIO.BOARD) #Use Board numerotation mode
+GPIO.setwarnings(False) #Disable warnings
+
+#Use pin 12 for PWM signal
+pwm_gpio = 12
+frequence = 50
+GPIO.setup(pwm_gpio, GPIO.OUT)
+pwm = GPIO.PWM(pwm_gpio, frequence)
+
+#Init at 0°
+pwm.start(angle_to_percent(0))
+time.sleep(1)
+
+#Go at 90°
+pwm.ChangeDutyCycle(angle_to_percent(90))
+time.sleep(1)
+
+#Finish at 180°
+pwm.ChangeDutyCycle(angle_to_percent(180))
+time.sleep(1)
+
+#Close GPIO & cleanup
+pwm.stop()
+GPIO.cleanup()
