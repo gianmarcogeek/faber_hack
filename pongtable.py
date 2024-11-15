@@ -2,40 +2,33 @@ import RPi.GPIO as GPIO
 import time
 
 # Configurazione dei pin (numerazione BOARD)
-SERVO_PIN = 3  # Board pin 3
-BUTTON_PIN = 5  # Board pin 5
+SERVO_PIN = 3  # Pin BOARD collegato al servo
 
-GPIO.setmode(GPIO.BOARD)  # Usa la numerazione fisica dei pin
+# Configurazione GPIO
+GPIO.setmode(GPIO.BOARD)
 GPIO.setup(SERVO_PIN, GPIO.OUT)
-GPIO.setup(BUTTON_PIN, GPIO.IN)  # Pull-up fisico gestito a livello hardware
 
-# Configurazione PWM per il servo
-pwm = GPIO.PWM(SERVO_PIN, 200)  # Frequenza a 50 Hz
-pwm.start(5)  # Posizione iniziale: neutro (90°)
+# Configurazione PWM
+pwm = GPIO.PWM(SERVO_PIN, 50)  # Frequenza a 50 Hz
+pwm.start(7.5)  # Posizione iniziale: neutro (90°)
 
-# Variabili di stato
-positions = [5, 7.5, 10]  # Duty cycle per 0°, 90°, 180°
-current_position = 0
-
-# def button_pressed_callback(channel):
-#     global current_position
-#     current_position = (current_position + 1) % len(positions)
-#     pwm.ChangeDutyCycle(positions[current_position])
-#     print(f"Posizione attuale: {current_position * 90}°")
-
-# # Configura l'evento del pulsante con debouncing
-# GPIO.add_event_detect(BUTTON_PIN, GPIO.FALLING, callback=button_pressed_callback, bouncetime=300)
+# Funzione per spostare il servo
+def move_servo(start_position, end_position, delay=0.05, steps=20):
+    step_size = (end_position - start_position) / steps  # Calcola il passo
+    for i in range(steps + 1):
+        position = start_position + step_size * i
+        pwm.ChangeDutyCycle(position)
+        time.sleep(delay)
+    pwm.ChangeDutyCycle(end_position)  # Assicura che resti nella posizione finale
+    print(f"Movimento completato. Posizione finale: {end_position}")
 
 try:
-    while True:
-        time.sleep(0.1)  # Mantieni attivo il programma
-        pwm.ChangeDutyCycle(7.5)
-        time.sleep(2) 
-        pwm.ChangeDutyCycle(10)
-        time.sleep(2) 
-        pwm.ChangeDutyCycle(7.5)
-        time.sleep(2)
-        pwm.ChangeDutyCycle(5)
-except KeyboardInterrupt:
+    # Movimento da 0° (duty cycle 5) a 180° (duty cycle 10)
+    print("Inizio movimento...")
+    move_servo(5, 10)  # Da 0° a 180°
+    time.sleep(2)  # Attendi 2 secondi
+    move_servo(10, 5)  # Torna a 0°
+    print("Movimento completato!")
+finally:
     pwm.stop()
     GPIO.cleanup()
