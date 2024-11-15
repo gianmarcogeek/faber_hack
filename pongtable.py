@@ -9,7 +9,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(SERVO_PIN, GPIO.OUT)
 
 # Configurazione PWM
-pwm = GPIO.PWM(SERVO_PIN, 5)  # Frequenza a 50 Hz
+pwm = GPIO.PWM(SERVO_PIN, 20)  # Frequenza a 50 Hz
 pwm.start(7.5)  # Posizione iniziale: neutro (90°)
 
 # Funzione per spostare il servo
